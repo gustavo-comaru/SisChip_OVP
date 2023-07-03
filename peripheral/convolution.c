@@ -10,6 +10,12 @@
 #include "convolution.igen.h"
 #include <string.h>
 
+#define CONV_IDLE           0
+#define CONV_REQUEST        1
+#define CONV_PROCESSING     2
+#define CONV_READY          4
+#define CONV_FINISH         8
+
 unsigned int val = 20;
 
 //////////////////////////////// Callback stubs ////////////////////////////////
@@ -30,7 +36,6 @@ PPM_REG_WRITE_CB(addr_m1_W) {
     }
     *(Uns32*)user = data;
     // YOUR CODE HERE (addr_m1_W)
-    convolutionPort_ab_data.addr_re.value = (unsigned int) 123;
 }
 
 PPM_REG_READ_CB(addr_m2_R) {
@@ -103,6 +108,10 @@ PPM_REG_WRITE_CB(status_W) {
     }
     *(Uns32*)user = data;
     // YOUR CODE HERE (status_W)
+    if(convolutionPort_ab_data.status.value == CONV_REQUEST) {
+        convolutionPort_ab_data.addr_re.value = convolutionPort_ab_data.addr_m1.value + convolutionPort_ab_data.addr_m2.value;
+        convolutionPort_ab_data.status.value = CONV_READY;
+    }
 }
 
 PPM_CONSTRUCTOR_CB(constructor) {
