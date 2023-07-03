@@ -123,6 +123,7 @@ static OP_CONSTRUCT_FN(instantiateComponents) {
         "convolution0",
         OP_CONNECTIONS(
             OP_BUS_CONNECTIONS(
+                OP_BUS_CONNECT(bus0_b, "MREAD"),
                 OP_BUS_CONNECT(bus0_b, "convolutionPort", .slave=1, .addrLo=0x10000000ULL, .addrHi=0x10000013ULL)
             )
         ),

@@ -37,3 +37,4 @@ ihwconnect -bus bus0 -instancename ram1 -busslaveport sp1 -loaddress 0x20000000 
 
 ihwaddperipheral -instancename convolution0 -modelfile peripheral/pse.pse
 ihwconnect -instancename convolution0 -busslaveport convolutionPort -bus bus0 -loaddress 0x10000000 -hiaddress 0x10000013
+ihwconnect -instancename convolution0 -busmasterport MREAD -bus bus0

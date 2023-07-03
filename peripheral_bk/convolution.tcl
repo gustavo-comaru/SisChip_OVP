@@ -6,11 +6,6 @@ imodelnewperipheral -name convolution \
                     -version 1.0 
 
 #########################################
-# Master read and write ports
-#########################################
-imodeladdbusmasterport -name "MREAD" -addresswidth 32
-
-#########################################
 ## Slave port on the bus
 #########################################
 imodeladdbusslaveport -name convolutionPort -size 20 -mustbeconnected

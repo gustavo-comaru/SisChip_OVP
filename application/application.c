@@ -40,6 +40,8 @@ int main(int argc, char **argv) {
         }
     }
 
+    m1[0][0] = 123;
+
     printf("Matrix 1:\n");
     print_matrix(m1, MATRIX_SIZE);
     printf("\n");

@@ -71,6 +71,7 @@ void writeMem(unsigned int flit, unsigned int addr){
 
 // Reads a flit from a given address
 unsigned int readMem(unsigned int addr){
+    printf("!!!ReadMem\n");
     ppmAddressSpaceHandle h = ppmOpenAddressSpace("MREAD");
     if(!h) {
         bhmMessage("I", "NI_ITERATOR", "ERROR_READ h handling!");
@@ -91,18 +92,13 @@ void multiply(unsigned int m1, unsigned int m2, unsigned int res, int size) {
     printf("res_ptr = %p\n", (void*)res);
     printf("size = %d\n", size);
     
-    printf("Convol:\n");
-
-    int result = readMem(m1);
-    printf("Elemento 0x0 -- %u\n", result);
-
-
+    printf("Conv:\n");
     int i, j;
     for(i = 0; i < size; i++) {
         for(j = 0; j < size; j++) {
 
             // ((int **)res)[i][j] = ((int **)m1)[i][j] + ((int **)m2)[i][j];
-            printf("%02d ", (int) readMem(  ((unsigned int)readMem(m1+(i*4)))) );
+            printf("%02d ", (int) readMem(readMem(m1+i)+j));
 
         }
         printf("\n");
@@ -199,7 +195,7 @@ PPM_REG_WRITE_CB(status_W) {
     }
     *(Uns32*)user = data;
     // YOUR CODE HERE (status_W)
-     printf("!!\n");
+    printf("!!\n");
     if(convolutionPort_ab_data.status.value == CONV_REQUEST) {
         printf("!!!!!\n");
         multiply(convolutionPort_ab_data.addr_m1.value, convolutionPort_ab_data.addr_m2.value, convolutionPort_ab_data.addr_re.value, convolutionPort_ab_data.m_size.value);

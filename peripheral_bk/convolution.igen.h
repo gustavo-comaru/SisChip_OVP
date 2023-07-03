@@ -64,7 +64,6 @@ extern convolutionPort_ab_dataT convolutionPort_ab_data;
 ///////////////////////////////// Port handles /////////////////////////////////
 
 typedef struct handlesS {
-    ppmAddressSpaceHandle MREAD;
     void                 *convolutionPort;
 } handlesT, *handlesTP;
 

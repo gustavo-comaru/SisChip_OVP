@@ -28,15 +28,6 @@ static ppmBusPort busPorts[] = {
         .remappable      = 0,
         .description     = 0,
     },
-    {
-        .name            = "MREAD",
-        .type            = PPM_MASTER_PORT,
-        .addrBits        = 32,
-        .addrBitsMin     = 32,
-        .addrBitsMax     = 0,
-        .mustBeConnected = 0,
-        .description     = 0,
-    },
     { 0 }
 };
 
