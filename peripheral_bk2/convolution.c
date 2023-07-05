@@ -10,7 +10,14 @@
 #include "convolution.igen.h"
 #include <string.h>
 #include <stdio.h>
-#include "../config.h"
+
+#define CONV_IDLE           0
+#define CONV_REQUEST        1
+#define CONV_PROCESSING     2
+#define CONV_READY          4
+#define CONV_FINISH         8
+
+#define MATRIX_SIZE         4
 
 // Global variable to handle a flit in VECTOR type
 char chFlit[4];
@@ -83,24 +90,24 @@ int m1[MATRIX_SIZE][MATRIX_SIZE];
 int m2[MATRIX_SIZE][MATRIX_SIZE];
 int mr[MATRIX_SIZE][MATRIX_SIZE];
 
-void write_matrix(unsigned int buff, int matrix[MATRIX_SIZE][MATRIX_SIZE]) {
+void write_matrix(unsigned int buff, int matrix[MATRIX_SIZE][MATRIX_SIZE], int size) {
     int pos, i=0, j=0;
-    for(pos = 0; pos < MATRIX_SIZE*MATRIX_SIZE; pos++) {
+    for(pos = 0; pos < size*size; pos++) {
         writeMem(matrix[i][j], buff + (pos*4));
         i++;
-        if(i == MATRIX_SIZE){
+        if(i == size){
             i = 0;
             j++;
         }
     }
 }
 
-void read_matrix(unsigned int buff, int matrix[MATRIX_SIZE][MATRIX_SIZE]) {
+void read_matrix(unsigned int buff, int matrix[MATRIX_SIZE][MATRIX_SIZE], int size) {
     int pos, i=0, j=0;
-    for(pos = 0; pos < MATRIX_SIZE*MATRIX_SIZE; pos++) {
+    for(pos = 0; pos < size*size; pos++) {
         matrix[i][j] = readMem(buff + (pos*4));
         i++;
-        if(i == MATRIX_SIZE){
+        if(i == size){
             i = 0;
             j++;
         }
@@ -117,10 +124,20 @@ void print_matrix(int matrix[MATRIX_SIZE][MATRIX_SIZE]) {
     printf("\n");
 }
 
-void multiply(unsigned int buffer_m1, unsigned int buffer_m2, unsigned int buffer_mr) {
+void multiply(unsigned int buffer_m1, unsigned int buffer_m2, unsigned int buffer_mr, int size) {
     
-    read_matrix(buffer_m1, m1);
-    read_matrix(buffer_m2, m2);
+    // printf("m1_ptr = %p\n",  (void*)m1);
+    // printf("m2_ptr = %p\n",  (void*)m2);
+    // printf("res_ptr = %p\n", (void*)res);
+    // printf("size = %d\n", size);
+    
+    // printf("Convol:\n");
+
+    // int result = readMem(m1);
+    // printf("Elemento 0x0 -- %u\n", result);
+
+    read_matrix(buffer_m1, m1, size);
+    read_matrix(buffer_m2, m2, size);
 
     // print_matrix(m1);
     // print_matrix(m2);
@@ -130,7 +147,7 @@ void multiply(unsigned int buffer_m1, unsigned int buffer_m2, unsigned int buffe
         for(j = 0; j < MATRIX_SIZE; j++)
             mr[i][j] = m1[i][j] * m2[i][j];
     
-    write_matrix(buffer_mr, mr);
+    write_matrix(buffer_mr, mr, size);
     
     // print_matrix(mr);  
 }
@@ -225,8 +242,10 @@ PPM_REG_WRITE_CB(status_W) {
     }
     *(Uns32*)user = data;
     // YOUR CODE HERE (status_W)
+     printf("!!\n");
     if(convolutionPort_ab_data.status.value == CONV_REQUEST) {
-        multiply(convolutionPort_ab_data.addr_m1.value, convolutionPort_ab_data.addr_m2.value, convolutionPort_ab_data.addr_re.value);
+        printf("!!!!!\n");
+        multiply(convolutionPort_ab_data.addr_m1.value, convolutionPort_ab_data.addr_m2.value, convolutionPort_ab_data.addr_re.value, convolutionPort_ab_data.m_size.value);
         convolutionPort_ab_data.status.value = CONV_READY;
     }
 }

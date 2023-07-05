@@ -123,7 +123,6 @@ static void installRegisters(void) {
 
 static void installMasterPorts(void) {
     handles.MREAD = ppmOpenAddressSpace("MREAD");
-    handles.MWRITE = ppmOpenAddressSpace("MWRITE");
 }
 
 PPM_DOC_FN(installDocs){

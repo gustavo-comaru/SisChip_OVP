@@ -37,15 +37,6 @@ static ppmBusPort busPorts[] = {
         .mustBeConnected = 0,
         .description     = 0,
     },
-    {
-        .name            = "MWRITE",
-        .type            = PPM_MASTER_PORT,
-        .addrBits        = 32,
-        .addrBitsMin     = 32,
-        .addrBitsMax     = 0,
-        .mustBeConnected = 0,
-        .description     = 0,
-    },
     { 0 }
 };
 
